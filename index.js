@@ -15,17 +15,24 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-// Middleware para parsear JSON
-app.use(bodyParser.json());
+// Middleware para parsear texto plano
+app.use(bodyParser.text());
 
-// Endpoint para recibir el correo y guardarlo en la base de datos
+// Endpoint para recibir texto plano y guardarlo en la base de datos
 app.post('/api/email', async (req, res) => {
-  const { sender, subject, body } = req.body;
-  console.log(sender,subject,body);
+  const text = req.body;
+
+  // Supongamos que el texto tiene este formato:
+  // "sender@example.com;Subject of the email;This is the body of the email"
+
+  if (!sender || !subject || !body) {
+    return res.status(400).json({ error: 'Formato incorrecto. Use "sender;subject;body".' });
+  }
+
   try {
     const result = await pool.query(
       'INSERT INTO emails (sender, subject, body) VALUES ($1, $2, $3) RETURNING *',
-      [sender, subject, body]
+      ["sender", "subject", text]
     );
     res.status(201).json({ message: 'Correo guardado correctamente', data: result.rows[0] });
   } catch (error) {
