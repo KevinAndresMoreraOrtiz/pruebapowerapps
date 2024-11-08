@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 // Endpoint para recibir el correo y guardarlo en la base de datos
 app.post('/api/email', async (req, res) => {
   const { sender, subject, body } = req.body;
-
+  console.log(sender,subject,body);
   try {
     const result = await pool.query(
       'INSERT INTO emails (sender, subject, body) VALUES ($1, $2, $3) RETURNING *',
