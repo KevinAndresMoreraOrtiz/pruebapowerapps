@@ -13,6 +13,9 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false // Usa esto para pruebas; para producción, configura un certificado válido.
+  }
 });
 
 // Middleware para parsear texto plano
