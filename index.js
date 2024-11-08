@@ -24,11 +24,6 @@ app.post('/api/email', async (req, res) => {
 
   // Supongamos que el texto tiene este formato:
   // "sender@example.com;Subject of the email;This is the body of the email"
-
-  if (!sender || !subject || !body) {
-    return res.status(400).json({ error: 'Formato incorrecto. Use "sender;subject;body".' });
-  }
-
   try {
     const result = await pool.query(
       'INSERT INTO emails (sender, subject, body) VALUES ($1, $2, $3) RETURNING *',
