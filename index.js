@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,9 +15,12 @@ const pool = new Pool({
   database: process.env.DB_DATABASE,
   port: process.env.DB_PORT,
   ssl: {
-    rejectUnauthorized: false // Usa esto para pruebas; para producción, configura un certificado válido.
+    rejectUnauthorized: false // Asegura la conexión en entornos de producción
   }
 });
+
+// Middleware para habilitar CORS
+app.use(cors());
 
 // Middleware para parsear texto plano
 app.use(bodyParser.text());
@@ -24,7 +28,8 @@ app.use(bodyParser.text());
 // Endpoint para recibir texto plano y guardarlo en la base de datos
 app.post('/api/email', async (req, res) => {
   const text = req.body;
-
+  console.log(req.body);
+  
   // Supongamos que el texto tiene este formato:
   // "sender@example.com;Subject of the email;This is the body of the email"
   try {
